@@ -82,10 +82,15 @@ void PostProcessor::setProcessor(Processor* _processor)
 
 }
 
+static bool abs_compare(float a, float b)
+{
+	return (std::fabs(a) < std::fabs(b));
+}
+
 void PostProcessor::drawNx()
 {
-	nxscale = (size().width())/(processor->bars[processor->bars.size()-1][1]-processor->bars[0][0]);
-	nyscale = (size().height())/(fabs(std::max_element(processor->nMat.begin(),processor->nMat.end())-std::min_element(processor->nMat.begin(),processor->nMat.end())));
+	nxscale = (size().width())/(processor->nodes[processor->bars[processor->bars.size()-1][1]]-processor->nodes[processor->bars[0][0]]);
+	nyscale = (size().height()/2)/(fabs(*std::max_element(processor->nMat.begin(),processor->nMat.end(),abs_compare)));
 
 	nxscene = new QGraphicsScene(this);
 	ui->nxview->setScene(nxscene);
@@ -117,8 +122,8 @@ void PostProcessor::drawNx()
 void PostProcessor::drawSx()
 {
 
-	sxscale = (size().width())/(processor->bars[processor->bars.size()-1][1]-processor->bars[0][0]);
-	syscale = (size().height()/2)/(fabs(std::max_element(processor->sMat.begin(),processor->sMat.end())-std::min_element(processor->sMat.begin(),processor->sMat.end())));
+	sxscale = (size().width())/(processor->nodes[processor->bars[processor->bars.size()-1][1]]-processor->nodes[processor->bars[0][0]]);
+	syscale = (size().height()/2)/(fabs(*std::max_element(processor->sMat.begin(),processor->sMat.end(),abs_compare)));
 
 	sxscene = new QGraphicsScene(this);
 	ui->sxview->setScene(sxscene);
@@ -149,8 +154,12 @@ void PostProcessor::drawSx()
 
 void PostProcessor::drawUx()
 {
-	uxscale = (size().width())/(processor->bars[processor->bars.size()-1][1]-processor->bars[0][0]);
-	uyscale = (size().height()/2)/(fabs(std::max_element(processor->udopMat.begin(),processor->udopMat.end())-std::min_element(processor->udopMat.begin(),processor->udopMat.end())));
+	uxscale = (size().width())/(processor->nodes[processor->bars[processor->bars.size()-1][1]]-processor->nodes[processor->bars[0][0]]);
+	float maximum = 0;
+	for(int x=0; x<processor->udopMat.size(); ++x)
+	  for(int y=0; y<processor->udopMat[x].size(); ++y)
+		maximum = std::max(processor->udopMat[x][y], maximum,abs_compare);
+	uyscale = (size().height()/2)/maximum;
 
 	uxscene = new QGraphicsScene(this);
 	ui->uxview->setScene(uxscene);
