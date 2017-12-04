@@ -17,6 +17,7 @@ void Processor::clear()
 }
 
 
+
 void Processor::setNodes(std::vector<float> _nodes)
 {
 	this->nodes = _nodes;
@@ -248,6 +249,23 @@ float Processor::getForce(float type, float point)
 	return 0;
 }
 
+std::vector<double> Processor::getInPoint(double barNum, double LBar)
+{
+    std::vector<double> result;
+
+    float po = uMat[barNum*2+1] - uMat[barNum*2];
+    result.push_back((bars[barNum][3]*bars[barNum][2]/(nodes[bars[barNum][1]] - nodes[bars[barNum][0]]))*(po) + (getForce(2,barNum)*(nodes[bars[barNum][1]] - nodes[bars[barNum][0]])/2)*(1-2*(LBar)/(nodes[bars[barNum][1]] - nodes[bars[barNum][0]])));
+    result.push_back(result[0]/bars[barNum][2]);
+    float u0 = uMat[barNum*2];
+    float ul = uMat[barNum*2+1];
+    float l = nodes[bars[barNum][1]]-nodes[bars[barNum][0]];
+    float f = getForce(2,barNum);
+    float a = bars[barNum][2];
+    float e = bars[barNum][3];
+    float jl = (LBar);
+    result.push_back(u0 + (jl/l)*(ul-u0)+((f*l*l)/(2*a*e))*(jl/l)*(1-(jl/l)));
+    return result;
+}
 std::vector<float> Processor::kramer(std::vector<std::vector<float>> A) {
 	int n = A.size();
 	bool empty = true;

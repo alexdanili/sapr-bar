@@ -436,7 +436,25 @@ void MainWindow::on_BarsTable_cellChanged(int row, int column)
 							}
 						}
 					}
-				}
+                }else if(column == 4)
+                {
+                    if(ui->BarsTable->item(row,column) != NULL)
+                    {
+                        auto tmp = ui->BarsTable->item(row,column)->text();
+                        if(tmp != "")
+                        {
+                            if(tmp.toDouble() == 0)
+                            {
+                                QMessageBox messageBox;
+                                messageBox.critical(0,"Ошибка записи","Маскимальное допустимое напряжение не может равняться нулую!");
+                                messageBox.setFixedSize(500,200);
+                                error = true;
+                                ui->BarsTable->item(row,column)->setText("");
+
+                            }
+                        }
+                    }
+                }
 				std::vector<std::vector<double>> bars;
 				for(int i = 0; i < ui->BarsTable->rowCount(); i++)
 				{
@@ -988,7 +1006,7 @@ void MainWindow::on_submenuProcessor_triggered()
 
 				d = pow((a*4)/3.14,0.5);
 			}
-			std::vector<float> bar{ntrb,ntre,a,ui->BarsTable->item(i,3)->text().toFloat()};
+                std::vector<float> bar{ntrb,ntre,a,ui->BarsTable->item(i,3)->text().toFloat(),ui->BarsTable->item(i,4)->text().toDouble()};
 
 			bars.push_back(bar);
 		}

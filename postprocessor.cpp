@@ -12,6 +12,7 @@ PostProcessor::PostProcessor(QWidget *parent) :
     ui->nxview->setScene(nxscene);
     ui->sxview->setScene(sxscene);
     ui->uxview->setScene(uxscene);
+    ui->nvalue->setMaximum(1);
     ui->nvalue->setMaximum(50);
 }
 QPoint PostProcessor::percentPoint(float x, float y)
@@ -35,6 +36,8 @@ void PostProcessor::setProcessor(Processor* _processor)
     this->processor = _processor;
     if(processor->n > 0)
         ui->nvalue->setValue(processor->n);
+    if(processor->udopMat.size() > 0)
+    {
     nxscene->clear();
     for(int i = 0; i < percentPoint(1,1).x()/50; i++)
     {
@@ -70,31 +73,38 @@ void PostProcessor::setProcessor(Processor* _processor)
         QTableWidgetItem* item1 = new QTableWidgetItem;
         QTableWidgetItem* item2 = new QTableWidgetItem;
         QTableWidgetItem* item3 = new QTableWidgetItem;
+        QTableWidgetItem* item4 = new QTableWidgetItem;
         item1->setText("Nx"+QString::number(j+1));
         item2->setText("Sx"+QString::number(j+1));
-        item3->setText("Ux"+QString::number(j+1));
+        item3->setText("Ux"+QString::number(j+1));        
+        item4->setText("Max Sx"+QString::number(j+1));
         item1->setBackgroundColor(Qt::gray);
         item2->setBackgroundColor(Qt::gray);
         item3->setBackgroundColor(Qt::gray);
+        item4->setBackgroundColor(Qt::gray);
         ui->tableWidget->setItem(j*(processor->n+1)+j,0,item1);
         ui->tableWidget->setItem(j*(processor->n+1)+j,1,item2);
         ui->tableWidget->setItem(j*(processor->n+1)+j,2,item3);
+        ui->tableWidget->setItem(j*(processor->n+1)+j,3,item4);
         for(int i = 0; i < processor->n+1; i++)
         {
             QTableWidgetItem* item1 = new QTableWidgetItem;
             QTableWidgetItem* item2 = new QTableWidgetItem;
             QTableWidgetItem* item3 = new QTableWidgetItem;
+            QTableWidgetItem* item4 = new QTableWidgetItem;
             item1->setText(QString::number(processor->nMat[j*(processor->n+1)+i]));
             item2->setText(QString::number(processor->sMat[j*(processor->n+1)+i]));
-            if(fabs(processor->sMat[j*(processor->n+1)+i]) > processor->bars[j][2])
+            if(fabs(processor->sMat[j*(processor->n+1)+i]) > processor->bars[j][4])
             {
                 item2->setBackgroundColor(Qt::red);
             }
 
-            item3->setText(QString::number(processor->udopMat[j][i]));
+            item3->setText(QString::number(processor->udopMat[j][i]));            
+            item4->setText(QString::number(processor->bars[j][4]));
             ui->tableWidget->setItem(j*(processor->n+1)+j+i+1,0,item1);
             ui->tableWidget->setItem(j*(processor->n+1)+j+i+1,1,item2);
             ui->tableWidget->setItem(j*(processor->n+1)+j+i+1,2,item3);
+            ui->tableWidget->setItem(j*(processor->n+1)+j+i+1,3,item4);
         }
     }
 
@@ -102,7 +112,7 @@ void PostProcessor::setProcessor(Processor* _processor)
     drawSx();
     drawUx();
 
-
+}
 
 }
 
@@ -213,9 +223,12 @@ void PostProcessor::changeEvent(QEvent *e)
 
 void PostProcessor::resizeEvent(QResizeEvent* event)
 {
+    if(processor->udopMat.size() > 0)
+    {
     drawNx();
     drawSx();
     drawUx();
+    }
 
 }
 
@@ -302,7 +315,7 @@ void PostProcessor::on_uxplusbtn_clicked()
 
 void PostProcessor::on_nvalue_valueChanged(int arg1)
 {
-    if(processor->n > 0)
+    if(processor->n > 0 && processor->udopMat.size() > 0)
     {
         processor->n = arg1;
         processor->calculate();
@@ -380,4 +393,55 @@ void PostProcessor::on_formreport_clicked()
          </body>\
          </html>";
          file.close();
+}
+
+void PostProcessor::on_calcInPoint_clicked()
+{
+    bool dbl = false;
+    ui->barNum->text().toDouble(&dbl);
+    if(dbl)
+    {
+        if(ui->barNum->text().toDouble() > 0 && ui->barNum->text().toDouble() <= processor->bars.size())
+        {
+            ui->LBar->text().toDouble(&dbl);
+            if(dbl)
+            {
+                if(ui->LBar->text().toDouble() >= 0 && ui->LBar->text().toDouble() <= processor->nodes[processor->bars[ui->barNum->text().toDouble() - 1][1]] - processor->nodes[processor->bars[ui->barNum->text().toDouble() - 1][0]])
+                {
+                    std::vector<double> tmp = processor->getInPoint(ui->barNum->text().toDouble()-1, ui->LBar->text().toDouble());
+                    ui->NxLabel->setText("Nx: " + QString::number(tmp[0]));
+                    ui->SxLabel->setText("Sx: " + QString::number(tmp[1]));
+                    ui->UxLabel->setText("Ux: " + QString::number(tmp[2]));
+                }
+                else
+                {
+                    QMessageBox messageBox;
+                    messageBox.critical(0,"Ошибка","Не правильная точка на стержне!");
+                    ui->LBar->setText("");
+                    messageBox.setFixedSize(500,200);
+                }
+            }
+            else
+            {
+                QMessageBox messageBox;
+                messageBox.critical(0,"Ошибка","Неверный формат ввода длинны стержня!");
+                ui->LBar->setText("");
+                messageBox.setFixedSize(500,200);
+            }
+        }
+        else
+        {
+            QMessageBox messageBox;
+            messageBox.critical(0,"Ошибка","Стержня не существует!");
+            ui->barNum->setText("");
+            messageBox.setFixedSize(500,200);
+        }
+    }
+    else
+    {
+        QMessageBox messageBox;
+        messageBox.critical(0,"Ошибка","Неверный формат ввода стержня!");
+        ui->barNum->setText("");
+        messageBox.setFixedSize(500,200);
+    }
 }

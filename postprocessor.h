@@ -2,6 +2,7 @@
 #define POSTPROCESSOR_H
 
 #include <QtWidgets/QWidget>
+#include <QMessageBox>
 #include <QGraphicsView>
 #include <qgraphicsitem.h>
 #include <QFileDialog>
@@ -67,6 +68,8 @@ private slots:
 	void on_nvalue_valueChanged(int arg1);
 
 	void on_formreport_clicked();
+
+    void on_calcInPoint_clicked();
 
 private:
 	QPoint percentPoint(float x, float y);

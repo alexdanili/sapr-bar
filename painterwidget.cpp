@@ -60,7 +60,8 @@ void PainterWidget::setFixators(bool _leftFixator, bool _rightFixator)
 
 void PainterWidget::setScale(float _scale)
 {
-	this->scale = _scale;
+    this->scale = _scale;
+    draw();
 }
 
 void PainterWidget::clearArea()
@@ -94,7 +95,7 @@ void PainterWidget::drawRightFixator(QPainter *painter)
 void PainterWidget::drawBars(QPainter* painter)
 {
 
-	int diff = (yAxie*2 - yAxie*2/10)/bars.size();
+    int diff = (yAxie*2 - yAxie*2)/bars.size();
 	//sort width
 	std::vector<int> barI;
 	std::vector<double> barSort;
@@ -120,6 +121,7 @@ void PainterWidget::drawBars(QPainter* painter)
 			}
 		}
 	}
+    diff = (barSort[barSort.size() - 1] - barSort[0])/barSort.size();
 	std::vector<double> tmp;
 	tmp.clear();
 	tmp.resize(barSort.size());
@@ -151,7 +153,7 @@ void PainterWidget::drawBars(QPainter* painter)
 
 		if(i == 0)
 		{
-			barSort[0] = yAxie*2/10;
+            barSort[0] = 30;
 			flags[0] = true;
 		}
 		else
@@ -229,25 +231,9 @@ void PainterWidget::drawBars(QPainter* painter)
 			tmp[i] = barSort[i];
 		}
 	}
+    diff = (barSort[barSort.size() - 1] - barSort[0])/barSort.size();
 
-	diff = 250;
-	bool rg = false;
-	while(!rg)
-	{
-		int pl = 50;
-		for(int i = 1; i < bars.size(); i++)
-		{
-			pl+= 50 + (i*diff);
-		}
-		if(pl > size().width()-40)
-		{
-			diff -=1;
-		}
-		else
-		{
-			rg = true;
-		}
-	}
+
 
 	flags.clear();
 	flags.resize(barSort.size());

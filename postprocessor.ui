@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -300,7 +300,7 @@
           <number>0</number>
          </property>
          <property name="columnCount">
-          <number>3</number>
+          <number>4</number>
          </property>
          <column>
           <property name="text">
@@ -315,6 +315,11 @@
          <column>
           <property name="text">
            <string>Ux</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Max Sx</string>
           </property>
          </column>
         </widget>
@@ -373,38 +378,49 @@
           </widget>
          </item>
          <item row="1" column="1" colspan="2">
-          <widget class="QLineEdit" name="barNum"/>
+          <widget class="QLineEdit" name="barNum">
+           <property name="inputMask">
+            <string/>
+           </property>
+           <property name="maxLength">
+            <number>5</number>
+           </property>
+          </widget>
          </item>
          <item row="2" column="1" colspan="2">
           <widget class="QLineEdit" name="LBar"/>
          </item>
          <item row="1" column="3" rowspan="3" colspan="2">
           <layout class="QGridLayout" name="gridLayout_14">
+           <item row="3" column="0">
+            <widget class="QLabel" name="UxLabel">
+             <property name="text">
+              <string>Ux:</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_4">
+            <widget class="QLabel" name="NxLabel">
              <property name="text">
               <string>Nx:</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_5">
+           <item row="2" column="0">
+            <widget class="QLabel" name="SxLabel">
              <property name="text">
               <string>Sx:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string>Ux:</string>
              </property>
             </widget>
            </item>
           </layout>
          </item>
          <item row="5" column="1" colspan="4">
-          <widget class="QSpinBox" name="nvalue"/>
+          <widget class="QSpinBox" name="nvalue">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

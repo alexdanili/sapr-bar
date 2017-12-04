@@ -25,6 +25,7 @@ public:
 	float n;
 
 	void clear();
+    std::vector<double> getInPoint(double barNum, double LBar);
 	void setNodes(std::vector<float> _nodes);
 	void setBars(std::vector<std::vector<float>> _bars);
 	void setForces(std::vector<std::vector<float>> _forces);
