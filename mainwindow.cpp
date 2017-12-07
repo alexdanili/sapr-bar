@@ -264,6 +264,8 @@ void MainWindow::on_NodesTable_cellChanged()
 			}
 		}
 
+		ui->PainterObj->clearArea();
+		ui->PainterObj->setFixators(leftFixator,rightFixator);
 		ui->PainterObj->setNodes(_nodes);
 		on_BarsTable_cellChanged(0,0);
 		on_ForcesTable_cellChanged();
@@ -508,6 +510,8 @@ void MainWindow::on_BarsTable_cellChanged(int row, int column)
 						}
 					}
 
+					ui->PainterObj->clearArea();
+					ui->PainterObj->setFixators(leftFixator,rightFixator);
 					ui->PainterObj->setNodes(_nodes);
 					ui->PainterObj->setBars(bars);
 				}
@@ -515,6 +519,9 @@ void MainWindow::on_BarsTable_cellChanged(int row, int column)
 				{
 					std::vector<double> np;
 					std::vector<std::vector<double>> bp;
+
+					ui->PainterObj->clearArea();
+					ui->PainterObj->setFixators(leftFixator,rightFixator);
 					ui->PainterObj->setNodes(np);
 					ui->PainterObj->setBars(bp);
 				}
@@ -865,6 +872,7 @@ void MainWindow::on_submenuOpen_triggered()
 	ui->NodesTable->setRowCount(0);
 	ui->BarsTable->setRowCount(0);
 	ui->ForcesTable->setRowCount(0);
+	ui->PainterObj->clearArea();
 	while(!project.atEnd())
 	{
 		tmp = project.readLine();
@@ -933,8 +941,9 @@ void MainWindow::on_submenuOpen_triggered()
 						ui->RightFixator->setChecked(true);
 						rightFixator = true;
 					}
-					ui->PainterObj->setFixators(leftFixator,rightFixator);
+
 				}
+				ui->PainterObj->setFixators(leftFixator,rightFixator);
 			}
 		}
 	}

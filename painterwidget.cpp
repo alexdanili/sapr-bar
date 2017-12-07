@@ -37,10 +37,13 @@ QPoint PainterWidget::percentPoint(float x, float y)
 void PainterWidget::setNodes(std::vector<double> _nodes)
 {
 	this->nodes = _nodes;
+	this->nodesc = _nodes;
+
 }
 void PainterWidget::setBars(std::vector<std::vector<double> > _bars)
 {
 	this->bars = _bars;
+	this->barsc = _bars;
 	draw();
 }
 
@@ -60,8 +63,8 @@ void PainterWidget::setFixators(bool _leftFixator, bool _rightFixator)
 
 void PainterWidget::setScale(float _scale)
 {
-    this->scale = _scale;
-    draw();
+	this->scale = _scale;
+	draw();
 }
 
 void PainterWidget::clearArea()
@@ -95,7 +98,7 @@ void PainterWidget::drawRightFixator(QPainter *painter)
 void PainterWidget::drawBars(QPainter* painter)
 {
 
-    int diff = (yAxie*2 - yAxie*2)/bars.size();
+	float diff = yAxie*2;
 	//sort width
 	std::vector<int> barI;
 	std::vector<double> barSort;
@@ -103,7 +106,7 @@ void PainterWidget::drawBars(QPainter* painter)
 	barSort.clear();
 	for(int i = 0; i < bars.size(); i++)
 	{
-		barSort.push_back(bars[i][2]);
+		barSort.push_back(barsc[i][2]);
 		barI.push_back(i);
 	}
 	for (int i = barSort.size() - 1; i >= 0; i--)
@@ -121,7 +124,7 @@ void PainterWidget::drawBars(QPainter* painter)
 			}
 		}
 	}
-    diff = (barSort[barSort.size() - 1] - barSort[0])/barSort.size();
+	diff = 30.0f/barSort[0];
 	std::vector<double> tmp;
 	tmp.clear();
 	tmp.resize(barSort.size());
@@ -153,14 +156,14 @@ void PainterWidget::drawBars(QPainter* painter)
 
 		if(i == 0)
 		{
-            barSort[0] = 30;
+			barSort[0] = 30;
 			flags[0] = true;
 		}
 		else
 		{
 
 			if(!flags[i])
-				barSort[i] = barSort[i-1]+diff;
+				barSort[i] = barSort[i]*diff;
 		}
 		for(int j = 0; j < barSort.size(); j++)
 		{
@@ -178,7 +181,7 @@ void PainterWidget::drawBars(QPainter* painter)
 
 	for(int i = 0; i < barI.size(); i++)
 	{
-		bars[barI[i]][2] = barSort[i];
+		bars[barI[i]][2] = barSort[i]*scale;
 	}
 
 
@@ -192,8 +195,8 @@ void PainterWidget::drawBars(QPainter* painter)
 	barI.clear();
 	for(int i = 0; i < bars.size(); i++)
 	{
-		barSort.push_back(bars[i][1]);
-		barOld.push_back(bars[i][1]);
+		barSort.push_back(barsc[i][1]);
+		barOld.push_back(barsc[i][1]);
 		barI.push_back(i);
 	}
 	for (int i = barSort.size() - 1; i >= 0; i--)
@@ -212,6 +215,7 @@ void PainterWidget::drawBars(QPainter* painter)
 		}
 	}
 
+	diff = 50.0f/barSort[0];
 	tmp.clear();
 	tmp.resize(barSort.size());
 
@@ -231,7 +235,6 @@ void PainterWidget::drawBars(QPainter* painter)
 			tmp[i] = barSort[i];
 		}
 	}
-    diff = (barSort[barSort.size() - 1] - barSort[0])/barSort.size();
 
 
 
@@ -250,7 +253,7 @@ void PainterWidget::drawBars(QPainter* painter)
 		{
 
 			if(!flags[i])
-				barSort[i] = barSort[i-1]+diff;
+				barSort[i] = barSort[i]*diff;
 		}
 		for(int j = 0; j < barSort.size(); j++)
 		{
@@ -268,7 +271,7 @@ void PainterWidget::drawBars(QPainter* painter)
 
 	for(int i = 0; i < barI.size(); i++)
 	{
-		bars[barI[i]][1] = barSort[i];
+		bars[barI[i]][1] = barSort[i]*scale;
 	}
 
 
@@ -278,7 +281,7 @@ void PainterWidget::drawBars(QPainter* painter)
 	{
 		double dl = barOld[i]-bars[i][1];
 		olddl += dl;
-		nodes[bars[i][3]] -= olddl;
+		nodes[bars[i][3]] = nodesc[bars[i][3]] - olddl;
 	}
 
 	for(int i = 0; i < bars.size(); i++)
@@ -306,7 +309,7 @@ void PainterWidget::drawForces(QPainter* painter)
 			if(forces[i][4] > 0)
 			{
 				painter->setPen(Qt::blue);
-				int pl = 1+forces[i][3] + leftFixator*11+10;
+				int pl = 1+forces[i][3]+leftFixator*11 + 10;
 
 				painter->drawLine(pl+nodes[forces[i][1]]+30-1,percentPoint(0,0.5).y()-3,pl+nodes[forces[i][1]]+30-8,percentPoint(0,0.5).y()-10);
 				painter->drawLine(pl+nodes[forces[i][1]]+30-1,percentPoint(0,0.5).y()-2,pl+nodes[forces[i][1]]+30-9,percentPoint(0,0.5).y()-10);
@@ -324,7 +327,7 @@ void PainterWidget::drawForces(QPainter* painter)
 			{
 
 				painter->setPen(Qt::blue);
-				int pl = 1+forces[i][3] + leftFixator*11+10;
+				int pl = 1+forces[i][3] +leftFixator*11 +10;
 				painter->drawLine(pl+nodes[forces[i][1]]-30+1,percentPoint(0,0.5).y()-3,pl+nodes[forces[i][1]]-30+8,percentPoint(0,0.5).y()-10);
 				painter->drawLine(pl+nodes[forces[i][1]]-30+1,percentPoint(0,0.5).y()-2,pl+nodes[forces[i][1]]-30+9,percentPoint(0,0.5).y()-10);
 				painter->drawLine(pl+nodes[forces[i][1]]-30+1-1,percentPoint(0,0.5).y()-2,pl+nodes[forces[i][1]]-30+9,percentPoint(0,0.5).y()-9);
@@ -344,7 +347,7 @@ void PainterWidget::drawForces(QPainter* painter)
 
 
 			painter->setPen(QColor(255,137,0));
-			int pl = 1+forces[i][3] + leftFixator*11+10;
+			int pl = 1+forces[i][3] + leftFixator*11 +10;
 			painter->drawLine(pl+nodes[forces[i][1]]-1,percentPoint(0,0.5).y(),pl+nodes[forces[i][2]]-3,percentPoint(0,0.5).y());
 			if(forces[i][4] > 0)
 			{
@@ -376,19 +379,41 @@ void PainterWidget::draw()
 	lastPos = 0;
 	QSize s = size();
 	int width = 0;
+	int height = 0;
 	for(int i = 0; i < bars.size(); i++)
 	{
 		width += 2 + bars[i][1];
 	}
-	width += leftFixator*11+10 + rightFixator*11;
-	if(width > size().width()*2)
+	for(int i = 0; i < bars.size(); i++)
 	{
-		s = QSize(width,size().height());
+		if(bars[i][2]/2 > height)
+		{
+			height = bars[i][2]/2;
+		}
+	}
+	width += leftFixator*11+10 + rightFixator*11;
+	if(width > size().width())
+	{
+
 	}
 	else
 	{
-		s = QSize(size().width(),size().height());
+		width = size().width();
 	}
+	if(bars.size() > 3)
+	{
+		int k = 0;
+	}
+	if(fabs(percentPoint(0,0.5).y() - height)*2 > size().height())
+	{
+		height = fabs(percentPoint(0,0.5).y() - height)*2;
+	}
+	else
+	{
+		height = size().height();
+	}
+
+	s = QSize(width,height);
 	image = new QImage(scale*s, QImage::Format_RGB32);
 	if(!image->isNull())
 	{

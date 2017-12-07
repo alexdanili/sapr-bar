@@ -44,8 +44,10 @@ public:
 private:
     Ui::PainterWidget *ui;
 	std::vector<double> nodes;
+	std::vector<double> nodesc;
     std::vector<std::vector<double>> bars;
     std::vector<std::vector<float>> forces;
+	std::vector<std::vector<double>> barsc;
     bool leftFixator = false;
     bool rightFixator = false;
     float scale = 1;
