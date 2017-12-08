@@ -199,7 +199,7 @@ void PostProcessor::drawUx()
         for(int k = 0; k < points.size(); k++)
         {
             points[k].setX(points[k].x()*uxscale);
-            points[k].setY(percentPoint(0.5,0.5).y() - points[k].y()*uyscale);
+			points[k].setY(percentPoint(0.5,0.5).y() - points[k].y()*uyscale*(points[k].y() > 0 ? 1 : -1));
         }
         uxscene->addPolygon(QPolygonF(points),QPen(Qt::black),QBrush(Qt::green));
         QGraphicsTextItem *text = uxscene->addText(QString::number(processor->udopMat[i][0]));

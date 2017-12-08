@@ -427,10 +427,10 @@ void MainWindow::on_BarsTable_cellChanged(int row, int column)
 						auto tmp = ui->BarsTable->item(row,column)->text();
 						if(tmp != "")
 						{
-							if(tmp.toDouble() == 0)
+							if(tmp.toDouble() <= 0)
 							{
 								QMessageBox messageBox;
-								messageBox.critical(0,"Ошибка записи","Модуль упругости не может равняться нулую!");
+								messageBox.critical(0,"Ошибка записи","Модуль упругости ДОЛЖЕН БЫТЬ БОЛЬШЕ НУЛЯ!");
 								messageBox.setFixedSize(500,200);
 								error = true;
 								ui->BarsTable->item(row,column)->setText("");
@@ -445,10 +445,10 @@ void MainWindow::on_BarsTable_cellChanged(int row, int column)
                         auto tmp = ui->BarsTable->item(row,column)->text();
                         if(tmp != "")
                         {
-                            if(tmp.toDouble() == 0)
+							if(tmp.toDouble() <= 0)
                             {
                                 QMessageBox messageBox;
-                                messageBox.critical(0,"Ошибка записи","Маскимальное допустимое напряжение не может равняться нулую!");
+								messageBox.critical(0,"Ошибка записи","Маскимальное допустимое напряжение должно быть больше нуля!");
                                 messageBox.setFixedSize(500,200);
                                 error = true;
                                 ui->BarsTable->item(row,column)->setText("");
