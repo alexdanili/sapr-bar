@@ -210,7 +210,7 @@ void Processor::calculate()
 		for(int j = 0; j <= n; j++)
 		{
 			nMat.push_back((bars[i][3]*bars[i][2]/(nodes[bars[i][1]] - nodes[bars[i][0]]))*(po) + (getForce(2,i)*(nodes[bars[i][1]] - nodes[bars[i][0]])/2)*(1-2*(j*(nodes[bars[i][1]] - nodes[bars[i][0]])/(n))/(nodes[bars[i][1]] - nodes[bars[i][0]])));
-		}
+        }
 
 	}
 	std::cout<<"\n";

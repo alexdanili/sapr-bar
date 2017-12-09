@@ -98,7 +98,7 @@ void PainterWidget::drawRightFixator(QPainter *painter)
 void PainterWidget::drawBars(QPainter* painter)
 {
 
-	float diff = yAxie*2;
+    double diff = yAxie*2;
 	//sort width
 	std::vector<int> barI;
 	std::vector<double> barSort;
@@ -124,7 +124,7 @@ void PainterWidget::drawBars(QPainter* painter)
 			}
 		}
 	}
-	diff = 30.0f/barSort[0];
+    diff = 30/barSort[0];
 	std::vector<double> tmp;
 	tmp.clear();
 	tmp.resize(barSort.size());
@@ -156,7 +156,7 @@ void PainterWidget::drawBars(QPainter* painter)
 
 		if(i == 0)
 		{
-			barSort[0] = 30;
+            barSort[0] = 30;
 			flags[0] = true;
 		}
 		else

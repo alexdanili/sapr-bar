@@ -50,7 +50,7 @@ private:
 	std::vector<std::vector<double>> barsc;
     bool leftFixator = false;
     bool rightFixator = false;
-    float scale = 1;
+    double scale = 1;
     int yAxie;
     int lastPos;
     QGraphicsScene *scene;

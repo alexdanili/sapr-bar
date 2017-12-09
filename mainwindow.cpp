@@ -277,6 +277,8 @@ void MainWindow::on_NodesTable_cellChanged()
 void MainWindow::on_BarsTable_cellChanged(int row, int column)
 {
 	QRegExp num("([0-9]+)");
+
+    QRegExp fnum("([0-9]{0,9}[\\.][0-9]{1,3})");
 	QRegExp powr("([0-9]{0,9}[\\.]?[0-9]{1,3})[\\n\\t\\v\\s]*\\*[\\n\\t\\v\\s]*([0-9]{0,9}[\\.]?[0-9]{1,3})[\\n\\t\\v\\s]*\\^[\\n\\t\\v\\s]*(-?[0-9]{1,3})|([0-9]{0,9}[\\.]?[0-9]{1,3})");
 	if(!error)
 	{
@@ -467,16 +469,23 @@ void MainWindow::on_BarsTable_cellChanged(int row, int column)
 						float begin = ui->NodesTable->item(ntrb,0)->text().toFloat();
 						float end = ui->NodesTable->item(ntre,0)->text().toFloat();
 						float length = end - begin;
-						QString dTmp = ui->BarsTable->item(i,2)->text();
+                        QString dTmp = ui->BarsTable->item(i,2)->text();
 						double d = 0;
 						double a = 0;
 						bool b1 = powr.exactMatch(dTmp);
 						bool b2 = num.exactMatch(dTmp);
+                        bool b3 = fnum.exactMatch(dTmp);
 						if(b2)
 						{
 							a = dTmp.toDouble();
 							d = pow((a*4)/3.14,0.5);
 						}
+                        else if(b3)
+                        {
+                            a = fnum.cap(1).toDouble();
+
+                            d = pow((a*4)/3.14,0.5);
+                        }
 						else if(b1)
 						{
 							a = powr.cap(1).toDouble()*pow(powr.cap(2).toDouble(),powr.cap(3).toDouble());
